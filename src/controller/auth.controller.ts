@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { OAuth2Client } from "google-auth-library";
 import jwt from "jsonwebtoken";
+import { verifyGoogleToken } from "../services/google.auth.js";
 
 export const register = async (req: Request, res: Response) => {
   const cred = req.body.credential;
@@ -82,19 +82,3 @@ export const login = async (req: Request, res: Response) => {
     });
   }
 };
-
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
-const client = new OAuth2Client(GOOGLE_CLIENT_ID);
-
-async function verifyGoogleToken(token: string) {
-  try {
-    const ticket = await client.verifyIdToken({
-      idToken: token,
-      audience: GOOGLE_CLIENT_ID,
-    });
-
-    return { payload: ticket.getPayload() };
-  } catch (error) {
-    return { erorr: "Invalid User" };
-  }
-}
