@@ -19,7 +19,9 @@ export const register = async (req: Request, res: Response) => {
 
       // Store payload in DB users.create(profile)
 
-      res.status(201).json({
+      console.log("log: profile", profile);
+
+      return res.status(201).json({
         message: "Signup was successful",
         user: {
           firstName: profile?.given_name,
