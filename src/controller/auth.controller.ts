@@ -44,7 +44,11 @@ export const login = async (req: Request, res: Response) => {
     return sendResponse(res, 400, "Password Incorrect!");
   }
 
-  sendResponse(res, 200, "Success", isExist);
+  const token = await jwt.sign({ _id: isExist._id! }, "MY_SECRET", {
+    expiresIn: "1d",
+  });
+
+  sendResponse(res, 200, "Success", { user: isExist, token });
 };
 
 export const GRegister = async (req: Request, res: Response) => {
