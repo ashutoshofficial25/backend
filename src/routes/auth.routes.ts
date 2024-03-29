@@ -1,9 +1,19 @@
 import { Router } from "express";
-import { register } from "../controller/auth.controller.js";
+import {
+  GLogin,
+  GRegister,
+  login,
+  register,
+} from "../controller/auth.controller.js";
+import { sendResponse } from "../helpers.js";
 
 const router = Router();
 
-router.get("/login", (req, res) => {});
+router.post("/g-login", GLogin);
+
+router.post("/g-register", GRegister);
+
+router.post("/login", login);
 
 router.post("/register", register);
 

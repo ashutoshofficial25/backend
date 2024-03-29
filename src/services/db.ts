@@ -8,7 +8,7 @@ mongoose.connection.on("error", (err) => {
 
 const URI: string =
   process.env.MONGO_URI ||
-  "mongodb+srv://ashutoshbksgold:ashutoshbksgold@cluster0.qejztmo.mongodb.net/";
+  "mongodb+srv://ashutoshbksgold:ashutoshbksgold@cluster0.qejztmo.mongodb.net/tbc";
 
 export async function connectMongoDB() {
   await mongoose.connect(URI, {
