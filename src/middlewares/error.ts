@@ -1,5 +1,5 @@
-import { NextFunction, Request, Response } from "express";
-import { sendResponse } from "../helpers.js";
+import { NextFunction, Request, Response } from 'express';
+import { sendResponse } from '../helpers.js';
 
 const errorMiddleware = (
   err: Error,
