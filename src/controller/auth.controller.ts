@@ -1,10 +1,10 @@
-import { Request, Response } from "express";
-import jwt from "jsonwebtoken";
-import { verifyGoogleToken } from "../services/google.auth.js";
-import User from "../models/user.model.js";
-import { sendResponse } from "../helpers.js";
+import { Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
+import { verifyGoogleToken } from '../services/google.auth.js';
+import User from '../models/user.model.js';
+import { sendResponse } from '../helpers.js';
 
-import bcrypt from "bcryptjs";
+import bcrypt from 'bcryptjs';
 
 export const register = async (req: Request, res: Response) => {
   const { name, email, query, password } = req.body;
@@ -12,7 +12,7 @@ export const register = async (req: Request, res: Response) => {
   const isExist = await User.findOne({ email });
 
   if (isExist) {
-    return sendResponse(res, 401, "User already exist");
+    return sendResponse(res, 401, 'User already exist');
   }
 
   const salt = await bcrypt.genSalt(12);
@@ -26,7 +26,7 @@ export const register = async (req: Request, res: Response) => {
     password: hashPassword,
   });
 
-  sendResponse(res, 201, "Success", user);
+  sendResponse(res, 201, 'Success', user);
 };
 
 export const login = async (req: Request, res: Response) => {
@@ -35,20 +35,33 @@ export const login = async (req: Request, res: Response) => {
   const isExist = await User.findOne({ email });
 
   if (!isExist) {
-    return sendResponse(res, 404, "Not exist");
+    return sendResponse(res, 404, 'Not exist');
   }
 
   const checkPassword = await bcrypt.compare(password, isExist.password!);
 
   if (!checkPassword) {
-    return sendResponse(res, 400, "Password Incorrect!");
+    return sendResponse(res, 400, 'Password Incorrect!');
   }
 
-  const token = await jwt.sign({ _id: isExist._id! }, "MY_SECRET", {
-    expiresIn: "1d",
+  const token = await jwt.sign({ _id: isExist._id! }, 'MY_SECRET', {
+    expiresIn: '10d',
   });
 
-  sendResponse(res, 200, "Success", { user: isExist, token });
+  sendResponse(res, 200, 'Success', {
+    user: { name: isExist.name, email: isExist.email, _id: isExist._id },
+    token,
+  });
+};
+
+export const getProfile = async (req: Request, res: Response) => {
+  const user = await User.findOne({ _id: req.user?._id }).select('-password');
+
+  if (!user) {
+    sendResponse(res, 404, 'User not found!');
+  }
+
+  sendResponse(res, 200, 'Success', user);
 };
 
 export const GRegister = async (req: Request, res: Response) => {
@@ -68,24 +81,24 @@ export const GRegister = async (req: Request, res: Response) => {
 
       // Store payload in DB users.create(profile)
 
-      console.log("log: profile", profile);
+      console.log('log: profile', profile);
 
       return res.status(201).json({
-        message: "Signup was successful",
+        message: 'Signup was successful',
         user: {
           firstName: profile?.given_name,
           lastName: profile?.family_name,
           picture: profile?.picture,
           email: profile?.email,
-          token: jwt.sign({ email: profile?.email }, "myScret", {
-            expiresIn: "1d",
+          token: jwt.sign({ email: profile?.email }, 'myScret', {
+            expiresIn: '1d',
           }),
         },
       });
     }
   } catch (error) {
     res.status(500).json({
-      message: "An error occurred. Registration failed.",
+      message: 'An error occurred. Registration failed.',
     });
   }
 };
@@ -94,7 +107,7 @@ export const GLogin = async (req: Request, res: Response) => {
   const cred = req.body.credential;
 
   if (!cred) {
-    sendResponse(res, 404, "Credentials required");
+    sendResponse(res, 404, 'Credentials required');
   }
 
   const verificationResponse = await verifyGoogleToken(req.body.credential);
@@ -109,18 +122,18 @@ export const GLogin = async (req: Request, res: Response) => {
   const isExist = await User.find({ email: profile?.email });
 
   if (!isExist) {
-    sendResponse(res, 404, "You are not registered");
+    sendResponse(res, 404, 'You are not registered');
   }
 
   res.status(201).json({
-    message: "Login was successful",
+    message: 'Login was successful',
     user: {
       firstName: profile?.given_name,
       lastName: profile?.family_name,
       picture: profile?.picture,
       email: profile?.email,
-      token: jwt.sign({ email: profile?.email }, "secret", {
-        expiresIn: "1d",
+      token: jwt.sign({ email: profile?.email }, 'secret', {
+        expiresIn: '1d',
       }),
     },
   });

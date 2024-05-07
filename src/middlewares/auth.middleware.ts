@@ -1,9 +1,9 @@
-import { NextFunction, Request, Response } from "express";
-import { sendResponse } from "../helpers.js";
-import jwt, { Secret } from "jsonwebtoken";
-import User, { IUser } from "../models/user.model.js";
-import { WithId } from "../types/global.types.js";
-import { Document } from "mongoose";
+import { NextFunction, Request, Response } from 'express';
+import { sendResponse } from '../helpers.js';
+import jwt, { Secret } from 'jsonwebtoken';
+import User, { IUser } from '../models/user.model.js';
+import { WithId } from '../types/global.types.js';
+import { Document } from 'mongoose';
 
 interface DecodedToken {
   _id: string;
@@ -17,21 +17,18 @@ export const checkAuth = async (
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
-    return sendResponse(res, 401, "Authorization is required");
+    return sendResponse(res, 401, 'Authorization is required');
   }
 
-  const token = authHeader.split(" ")[1];
+  const token = authHeader.split(' ')[1];
 
-  const [err, payload] = verifyToken(
-    token,
-    process.env.JWT_ACCESS_ADMIN_TOKEN_SECRET!
-  );
+  const [err, payload] = verifyToken(token, 'MY_SECRET');
 
   if (err) {
     const errMessage =
-      err.name === "TokenExpiredError"
-        ? "Access token expired"
-        : "Invalid access token";
+      err.name === 'TokenExpiredError'
+        ? 'Access token expired'
+        : 'Invalid access token';
 
     sendResponse(res, 401, errMessage);
     return;
@@ -40,7 +37,7 @@ export const checkAuth = async (
   const user = await User.findOne({ _id: payload?._id }).lean();
 
   if (!user) {
-    sendResponse(res, 404, "User not found");
+    sendResponse(res, 404, 'User not found');
   }
 
   req.user = user!;
