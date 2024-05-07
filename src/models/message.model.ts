@@ -5,6 +5,7 @@ interface IMessage {
   to: Schema.Types.ObjectId;
   message?: string;
   media?: string;
+  isSeen: boolean;
 }
 
 const MessageSchema = new Schema({
@@ -12,6 +13,7 @@ const MessageSchema = new Schema({
   to: { type: Schema.Types.ObjectId, ref: 'User' },
   message: { type: String },
   media: { type: String },
+  isSeen: { type: Boolean, default: false },
 });
 
 const Message = model<IMessage>('Message', MessageSchema);
