@@ -64,6 +64,16 @@ export const getProfile = async (req: Request, res: Response) => {
   sendResponse(res, 200, 'Success', user);
 };
 
+export const getAllUsers = async (req: Request, res: Response) => {
+  const user = await User.find().select('-password');
+
+  if (!user) {
+    sendResponse(res, 404, 'User not found!');
+  }
+
+  sendResponse(res, 200, 'Success', user);
+};
+
 export const GRegister = async (req: Request, res: Response) => {
   const cred = req.body.credential;
 

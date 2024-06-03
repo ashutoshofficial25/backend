@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   GLogin,
   GRegister,
+  getAllUsers,
   getProfile,
   login,
   register,
@@ -21,5 +22,7 @@ router.post('/register', register);
 router.use(checkAuth);
 
 router.get('/@me', getProfile);
+
+router.get('/users', getAllUsers);
 
 export default router;
