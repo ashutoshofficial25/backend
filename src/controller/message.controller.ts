@@ -14,3 +14,11 @@ export const sendMessage = async (req: Request, res: Response) => {
 
   sendResponse(res, 201, 'Success', newMessage);
 };
+
+export const getMessages = async (req: Request, res: Response) => {
+  const contactId = req.params?.contactId;
+
+  const messages = Message.find({ contactId });
+
+  sendResponse(res, 201, 'Success', messages);
+};
