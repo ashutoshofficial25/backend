@@ -8,7 +8,7 @@ export const getAllContracts = async (req: Request, res: Response) => {
   const [contacts, count] = await Promise.all([
     Contact.find({ users: userId })
       .populate('users', 'name email')
-      .populate('latestMessage')
+      .populate('latestMessage', 'message isSeen')
       .populate('admin', 'name email'),
     Contact.countDocuments({ users: userId }),
   ]);
