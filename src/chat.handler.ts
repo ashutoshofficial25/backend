@@ -15,7 +15,11 @@ const chatHandler = (io: any, socket: any) => {
   socket.on('sendMessage', async (data: any) => {
     const { from, to, contactId, message, media } = data;
 
-    io.to(to).emit('newMessage', message);
+    console.log('log: ', data);
+
+    const res = await io.to(to).emit('newMessage', message);
+
+    console.log('log: res', res);
   });
   socket.on('chat:delete', deleteChat);
 };
